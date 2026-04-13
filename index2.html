@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="styles2.css" />
+  </head>
+  <body>
+    <article data-testid="test-todo-card" class="todo-card">
+      <header class="todo-header">
+        <div class="checkbox-wrapper">
+          <input
+            type="checkbox"
+            id="todo-toggle"
+            data-testid="test-todo-complete-toggle"
+          />
+          <label for="todo-toggle" class="sr-only">Mark task as complete</label>
+        </div>
+
+        <div class="title-wrapper">
+          <h2 data-testid="test-todo-title">Build Testable Todo Card</h2>
+          <span
+            data-testid="test-todo-priority"
+            class="badge priority-high"
+            aria-label="High Priority"
+            >High</span
+          >
+        </div>
+      </header>
+
+      <p data-testid="test-todo-description" class="todo-description">
+        Create a clean, modern task component ensuring strict semantic HTML,
+        WCAG AA contrast, and perfect responsiveness from 320px to 1200px.
+      </p>
+
+      <div class="todo-meta">
+        <div class="meta-item">
+          <strong>Status:</strong>
+          <span data-testid="test-todo-status">In Progress</span>
+        </div>
+        <div class="meta-item time-info">
+          <time datetime="2026-04-15T18:00" data-testid="test-todo-due-date"
+            >Due Apr 15, 2026</time
+          >
+          <span
+            data-testid="test-todo-time-remaining"
+            class="time-hint"
+            aria-live="polite"
+            >Due in 3 days</span
+          >
+        </div>
+        <ul role="list" data-testid="test-todo-tags" class="tag-list">
+        <li data-testid="test-todo-tag-work" class="tag">Work</li>
+        <li data-testid="test-todo-tag-urgent" class="tag urgent">Urgent</li>
+      </ul>
+      </div>
+
+      
+
+      <footer class="todo-actions">
+        <button data-testid="test-todo-edit-button" class="btn edit-btn">
+          Edit
+        </button>
+        <button data-testid="test-todo-delete-button" class="btn delete-btn">
+          Delete
+        </button>
+      </footer>
+    </article>
+
+    <script src="app.js"></script>
+  </body>
+</html>
