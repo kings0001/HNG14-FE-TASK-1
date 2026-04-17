@@ -1,76 +1,102 @@
-*, *::before, *::after {
-  box-sizing: border-box; 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
-/* Base Reset & Variables */
 :root {
   --text-main: #1f2937;
   --text-muted: #6b7280;
   --bg-card: #ffffff;
   --border-color: #e5e7eb;
   --primary: #3b82f6;
+  --primary-hover: #2563eb;
   --danger: #ef4444;
-  --high-priority: #fee2e2;
-  --high-priority-text: #991b1b;
+  --danger-muted: #fef2f2;
+
+  /* Priority Colors */
+  --priority-low: #10b981;
+  --priority-medium: #f59e0b;
+  --priority-high: #ef4444;
 }
 
 body {
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: system-ui,-apple-system, sans-serif;
   background-color: #f3f4f6;
-  padding: 1rem;
+  padding: 2rem 1rem;
   color: var(--text-main);
 }
 
-/* Screen reader only class for the checkbox label */
 .sr-only {
   position: absolute;
   width: 1px;
   height: 1px;
   padding: 0;
   margin: -1px;
-  overflow: hidden;
+  overflow: hidden; 
   clip: rect(0, 0, 0, 0);
   border: 0;
 }
 
+.hidden {
+  display: none !important;
+}
 
-/* Card Container */
+/* Card Container & Priority Indicator */
 .todo-card {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 1.5rem;
   width: 100%;
-  max-width: 450px; /* Desktop limit */
+  max-width: 500px;
   margin: 0 auto;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  transition: opacity 0.3s ease;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
 }
 
-/* Header & Title */    
+.priority-indicator {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 6px;
+  background-color: var(--border-color);
+  transition: background-color 0.3s ease;
+}
+.todo-card[data-priority="Low"] .priority-indicator {
+  background-color: var(--priority-low);
+}
+.todo-card[data-priority="Medium"] .priority-indicator {
+  background-color: var(--priority-medium);
+}
+.todo-card[data-priority="High"] .priority-indicator {
+  background-color: var(--priority-high);
+}
 
+/* Header & Title */
 .todo-header {
   display: flex;
   align-items: flex-start;
   gap: 0.75rem;
   margin-bottom: 1rem;
 }
-
 .title-wrapper {
-  display: block;
-  flex-direction: column;
+  display: flex;
   justify-content: space-between;
   gap: 0.5rem;
   flex-grow: 1;
+  align-items: flex-start;
 }
-
 h2 {
   margin: 0;
   font-size: 1.25rem;
   line-height: 1.2;
+  transition: color 0.3s;
 }
 
-/* Checkbox & Focus States */
 input[type="checkbox"] {
   width: 1.25rem;
   height: 1.25rem;
@@ -78,50 +104,81 @@ input[type="checkbox"] {
   accent-color: var(--primary);
 }
 
-input[type="checkbox"]:focus-visible,
-button:focus-visible {
-  outline: 3px solid var(--primary);
-  outline-offset: 2px;
+/* Description & Collapsible */
+.collapsible-section {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+  transition: all 0.3s ease;
 }
-
-/* Description */
+.collapsible-section.expanded {
+  -webkit-line-clamp: unset;
+}
 .todo-description {
   color: var(--text-muted);
   font-size: 0.95rem;
   line-height: 1.5;
+  margin: 0;
+}
+.btn-text {
+  background: none;
+  border: none;
+  color: var(--primary);
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 0;
   margin-bottom: 1.25rem;
+  font-weight: 500;
+}
+.btn-text:hover {
+  text-decoration: underline;
 }
 
-/* Meta Data (Due Date & Status) */
+/* Meta Data */
 .todo-meta {
   display: flex;
   flex-direction: column;
-  /* justify-content: space-between; */
-  align-items: flex-start;
   gap: 0.75rem;
   margin-bottom: 1.25rem;
   font-size: 0.9rem;
 }
-
 .time-info {
   display: flex;
   flex-direction: column;
+  gap: 0.25rem;
 }
-
+.time-hints {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
 .time-hint {
-  color: var(--danger);
+  color: var(--text-muted);
   font-weight: 500;
   font-size: 0.85rem;
 }
 
+/* Status Control */
+.status-select {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+  font-size: 0.85rem;
+  background-color: #f9fafb;
+}
+
+/* Badges */
+
 /* Tags */
 .tag-list {
   display: flex;
-  flex-wrap: wrap; /* Allows tags to wrap on small screens */
+  flex-wrap: wrap; 
   gap: 0.4rem;
   list-style: none;
   padding: 0;
-  margin: 0 0 1rem 0;
+  margin: 0 0 1rem 0; /* Adds breathing room before the meta section */
 }
 
 .tag {
@@ -133,16 +190,11 @@ button:focus-visible {
   font-weight: 500;
 }
 
-/* .tag:hover {
-  background: #e5e7eb;
-} */
-
 .tag.urgent {
-  background: var(--high-priority);
-  color: var(--high-priority-text);
+  background: var(--high-priority, #fee2e2); /* Fallback color added just in case */
+  color: var(--high-priority-text, #991b1b);
 }
 
-/* Badges */
 .badge {
   display: inline-block;
   padding: 0.15rem 0.5rem;
@@ -151,20 +203,29 @@ button:focus-visible {
   font-weight: bold;
   text-transform: uppercase;
 }
-
-.priority-high {
-  background-color: var(--high-priority);
-  color: var(--high-priority-text);
+.todo-card[data-priority="Low"] .badge {
+  background: #d1fae5;
+  color: #065f46;
+}
+.todo-card[data-priority="Medium"] .badge {
+  background: #fef3c7;
+  color: #92400e;
+}
+.todo-card[data-priority="High"] .badge {
+  background: #fee2e2;
+  color: #991b1b;
+}
+.overdue-badge {
+  background: var(--danger);
+  color: white;
 }
 
 /* Buttons */
 .todo-actions {
   display: flex;
-  flex-direction: column;
   justify-content: flex-end;
   gap: 0.75rem;
 }
-
 .btn {
   padding: 0.5rem 1rem;
   border: none;
@@ -173,36 +234,89 @@ button:focus-visible {
   cursor: pointer;
   transition: background-color 0.2s;
 }
+.edit-btn {
+  background: #e5e7eb;
+  color: var(--text-main);
+}
+.edit-btn:hover {
+  background: #d1d5db;
+}
+.delete-btn {
+  background: var(--danger);
+  color: white;
+}
+.delete-btn:hover {
+  background: #b91c1c;
+}
+.save-btn {
+  background: var(--primary);
+  color: white;
+}
+.save-btn:hover {
+  background: var(--primary-hover);
+}
 
-.edit-btn { background: #e5e7eb; color: var(--text-main); }
-.edit-btn:hover { background: #d1d5db; }
+/* Form Styles */
+#edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+.form-input {
+  padding: 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.95rem;
+}
+.form-input:focus {
+  outline: 2px solid var(--primary);
+  outline-offset: -1px;
+}
 
-.delete-btn { background: var(--danger); color: white; }
-.delete-btn:hover { background: #b91c1c; }
-
-/* Completed State Styling */
+/* State Changes */
 .todo-card.completed h2 {
   text-decoration: line-through;
   color: var(--text-muted);
 }
 .todo-card.completed {
-  opacity: 0.7;
+  opacity: 0.8;
   background: #f9fafb;
+  border-color: var(--border-color);
+}
+.todo-card.completed .priority-indicator {
+  background-color: var(--text-muted);
+}
+
+.todo-card.in-progress {
+  border-color: var(--primary);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+}
+.todo-card.is-overdue {
+  border-color: var(--danger);
+  background-color: var(--danger-muted);
+}
+.todo-card.is-overdue .time-hint {
+  color: var(--danger);
+  font-weight: bold;
 }
 
 @media (min-width: 600px) {
-
-   .todo-actions {
-    flex-direction: row;
-    justify-content: flex-end;
-  }
-
-  .title-wrapper {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-  }
   .todo-meta {
     flex-direction: row;
     justify-content: space-between;
